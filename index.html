@@ -157,7 +157,7 @@ SOFTWARE.
         pointPlot.appendChild(phoneMarkerLine);
         function handleOrientation(event) {
             if (needle_lock != lock_toggle) {
-                if (orientationVector) {
+                if (orientationVector && mark_points) {
                     if (!plane_toggle) {
                         var projected_point = at.projectEqualArea(
                             orientationVector
@@ -219,6 +219,7 @@ SOFTWARE.
         var needle_lock = false;
         var lock_toggle = false;
         var plane_toggle = false;
+        var mark_points = true;
         var connected = false;
         var conn = {};
         gn.init({ orientationBase: GyroNorm.WORLD, frequency: 16 }).then(function () {
@@ -304,7 +305,18 @@ SOFTWARE.
                 phone_gc.style.display = "initial";
                 plane_toggle = false;
             }
-
+        });
+        var toggleMarker = document.getElementById("toggleMarker");
+        toggleMarker.addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            if (mark_points) {
+                // https://www.kirupa.com/html5/setting_css_styles_using_javascript.htm
+                toggleMarker.classList.add("disabledMarker");
+                mark_points = false;
+            } else {
+                toggleMarker.classList.remove("disabledMarker");
+                mark_points = true;
+            }
         });
         document.getElementById("saveFloppy").addEventListener("touchstart", function (event) {
             event.preventDefault();

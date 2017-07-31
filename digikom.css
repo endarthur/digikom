@@ -138,6 +138,11 @@ svg > g.stereo-element {
     fill:#704214;
 }
 
+.disabledMarker {
+    stroke: #c2c7c9;
+    fill: #c2c7c9;
+}
+
 @media (orientation: landscape) {
     #stereoPlot {
         height: 100vh;
