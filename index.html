@@ -143,7 +143,7 @@ SOFTWARE.
         var phone_gc = document.getElementById('phone-gc');
         var marked_planes = [];
         var marked_lines = [];
-        var orientationVector = {};
+        var orientationVector = false;
         phoneMarkerPlane.setAttribute("id", "orientationPlane");
         phoneMarkerPlane.setAttribute("cx", 0);
         phoneMarkerPlane.setAttribute("cy", 0);
@@ -309,17 +309,32 @@ SOFTWARE.
         document.getElementById("saveFloppy").addEventListener("touchstart", function (event) {
             event.preventDefault();
             var lineArray = [];
-            marked_planes.forEach(function (infoArray, index) {
-                var line = infoArray.join(",");
-                lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
-            });
-            var csvContent = lineArray.join("\n");
-            var encodedUri = encodeURI(csvContent);
-            var link = document.getElementById("csvAnchor");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "plane_data.csv");
-            link.click();
-            marked_planes = [];
+            if (marked_planes.length) {
+                marked_planes.forEach(function (infoArray, index) {
+                    var line = infoArray.join(",");
+                    lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+                });
+                var csvContent = lineArray.join("\n");
+                var encodedUri = encodeURI(csvContent);
+                var link = document.getElementById("csvAnchor");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "plane_data.csv");
+                link.click();
+                marked_planes = [];
+            }
+            if (marked_lines.length) {
+                marked_lines.forEach(function (infoArray, index) {
+                    var line = infoArray.join(",");
+                    lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+                });
+                var csvContent = lineArray.join("\n");
+                var encodedUri = encodeURI(csvContent);
+                var link = document.getElementById("csvAnchor");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "line_data.csv");
+                link.click();
+                marked_lines = [];
+            }
         });
     </script>
 </body>
