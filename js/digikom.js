@@ -19,6 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+// https://w3c.github.io/deviceorientation/spec-source-orientation.html
 var Auttitude = (function () {
 
     //from http://cwestblog.com/2012/11/12/javascript-degree-and-radian-conversion/

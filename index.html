@@ -96,7 +96,7 @@ SOFTWARE.
                 <path d="M 23 23 H 24 V 24 H 23 Z" />
                 <path d="M 0.6 23 H 1.6 V 24 H 0.6 Z" />
             </g>
-            <g id="toggleMarker" transform=" translate(75) rotate(45) scale(.5)">
+            <g id="toggleMarker" transform=" translate(15) rotate(45) scale(.5)">
                 <path d="M 0 0 V 20 H 7 V 0" />
                 <path d="M 1.5 20 V 25 H 5.5 V 20" />
                 <path d="M 3 25 V 30 H 4 V 25" />
@@ -119,6 +119,7 @@ SOFTWARE.
             <button type="button" id="connectionButton" onclick="connectPC()">connect</button>
         </div>
     </div>
+    <!-- menu here https://www.w3schools.com/howto/howto_js_sidenav.asp -->
     <a id="csvAnchor" display="none"></a>
     <script src="js/digikom.js"></script>
     <script src="js/gyronorm.complete.min.js"></script>
@@ -169,9 +170,11 @@ SOFTWARE.
                     } else {
                         var vector = orientationVector.dip_vector();
                         var projected_point = at.projectEqualArea(
-                            at.sphereLine(dipVector)
+                            vector
                         );
-                        marked_planes.push(vector);
+                        marked_lines.push(
+                            at.sphereLine(vector)
+                        );
                         var point_class = "plotPoint line";
                     }
 
@@ -303,6 +306,7 @@ SOFTWARE.
                 phoneMarkerPlane.style.display = "initial";
                 phoneMarkerLine.style.display = "none";
                 phone_gc.style.display = "initial";
+                orientationVector = false;
                 plane_toggle = false;
             }
         });
@@ -320,6 +324,7 @@ SOFTWARE.
         });
         document.getElementById("saveFloppy").addEventListener("touchstart", function (event) {
             event.preventDefault();
+            // https://stackoverflow.com/a/14966131/1457481 && https://stackoverflow.com/a/18849208/1457481
             var lineArray = [];
             if (marked_planes.length) {
                 marked_planes.forEach(function (infoArray, index) {
