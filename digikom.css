@@ -59,7 +59,7 @@ a {
     grid-area: stereo;
 }
 #stereoToolbar {
-    height: 30vw;
+    height: 20vw;
     width: 100vw;
     grid-area: stereobar;
     stroke: #704214;
@@ -97,8 +97,16 @@ a {
 }
 
 .plotPoint {
-    stroke: none;
+    r: 0.01;
     fill: #373d3f;
+}
+
+.plotPoint.plane {
+    fill: #e9162d;
+}
+
+.plotPoint.line {
+    fill: #162DE9;
 }
 
 #orientationPlane {
@@ -108,7 +116,7 @@ a {
 
 #orientationLine {
     stroke: none;
-    fill: #144270;
+    fill: #162DE9;
 }
 
 #stereoLines {
@@ -136,7 +144,7 @@ svg > g.stereo-element {
         width: 100vh;
     }
     #stereoToolbar {
-        height: 30vh;
+        height: 20vh;
         width: 100vh;
     }
 }

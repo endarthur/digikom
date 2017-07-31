@@ -86,7 +86,7 @@ SOFTWARE.
                 <circle cx="0" cy="0" r="10" opacity="0" />
             </g>
         </svg>
-        <svg width="100" height="30" id="stereoToolbar" viewBox="0 0 100 30">
+        <svg width="100" height="20" id="stereoToolbar" viewBox="0 0 100 20">
             <g id="saveFloppy" transform="translate(82) scale(.5)">
                 <path d="M 0 0 H 24 L 25 1 V 26 H 0 Z" />
                 <path d="M 2.2 26 V 11 H 22 V 26" />
@@ -102,10 +102,12 @@ SOFTWARE.
                 <path d="M 3 25 V 30 H 4 V 25" />
                 <path d="M 3 30 V 31 H 4 V 30 Z" fill-opacity="1" />
             </g>
+            <!--
             <g id="clearPlot" transform="translate(52) scale(.5)">
                 <path d="M 0 0 H 13 L 18 5 V 26 H 0 Z" />
                 <path d="M 13 0 V 5 H 18" />
             </g>
+            -->
         </svg>
         <div id="intro-text">
             <h1>DIGItal KOMpass</h1>
@@ -117,7 +119,7 @@ SOFTWARE.
             <button type="button" id="connectionButton" onclick="connectPC()">connect</button>
         </div>
     </div>
-
+    <a id="csvAnchor" display="none"></a>
     <script src="js/digikom.js"></script>
     <script src="js/gyronorm.complete.min.js"></script>
     <script src="js/peer.min.js"></script>
@@ -141,7 +143,7 @@ SOFTWARE.
         var phone_gc = document.getElementById('phone-gc');
         var marked_planes = [];
         var marked_lines = [];
-        orientationVector = {};
+        var orientationVector = {};
         phoneMarkerPlane.setAttribute("id", "orientationPlane");
         phoneMarkerPlane.setAttribute("cx", 0);
         phoneMarkerPlane.setAttribute("cy", 0);
@@ -156,18 +158,31 @@ SOFTWARE.
         function handleOrientation(event) {
             if (needle_lock != lock_toggle) {
                 if (orientationVector) {
-                    var projected_point = at.projectEqualArea(
-                        orientationVector
-                    );
+                    if (!plane_toggle) {
+                        var projected_point = at.projectEqualArea(
+                            orientationVector
+                        );
+                        marked_planes.push(
+                            at.spherePlane(orientationVector)
+                        );
+                        var point_class = "plotPoint plane";
+                    } else {
+                        var vector = orientationVector.dip_vector();
+                        var projected_point = at.projectEqualArea(
+                            at.sphereLine(dipVector)
+                        );
+                        marked_planes.push(vector);
+                        var point_class = "plotPoint line";
+                    }
+
                     var dataMarker = document.createElementNS(
                         "http://www.w3.org/2000/svg",
                         "circle"
                     );
                     dataMarker.setAttribute("cx", projected_point[0]);
                     dataMarker.setAttribute("cy", projected_point[1]);
-                    dataMarker.setAttribute("class", "plotPoint");
+                    dataMarker.setAttribute("class", point_class);
                     dataPlot.appendChild(dataMarker);
-                    marked_planes.push(orientationVector);
                     orientationVector = false;
                 }
                 return;  // needle is locked
@@ -279,6 +294,7 @@ SOFTWARE.
                 phoneMarkerPlane.style.display = "none";
                 phoneMarkerLine.style.display = "initial";
                 phone_gc.style.display = "none";
+                orientationVector = false;
                 plane_toggle = true;
             } else {
                 document.getElementById("planeMeasureOn").style.display = "initial";
@@ -289,6 +305,21 @@ SOFTWARE.
                 plane_toggle = false;
             }
 
+        });
+        document.getElementById("saveFloppy").addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            var lineArray = [];
+            marked_planes.forEach(function (infoArray, index) {
+                var line = infoArray.join(",");
+                lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+            });
+            var csvContent = lineArray.join("\n");
+            var encodedUri = encodeURI(csvContent);
+            var link = document.getElementById("csvAnchor");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "plane_data.csv");
+            link.click();
+            marked_planes = [];
         });
     </script>
 </body>
