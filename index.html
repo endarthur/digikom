@@ -111,12 +111,11 @@ SOFTWARE.
         </svg>
         <div id="intro-text">
             <h1>DIGItal KOMpass</h1>
-            <h2>Connect to a computer</h2>
+            <h2>Connect phone</h2>
             <p>
-                To connect a cellphone running digikom to a computer, copy this code to the phone and click connect.
+                To connect a cellphone running digikom to a computer, scan the following qr code.
             </p>
-            <input type="text" id="connection-id"></input>
-            <button type="button" id="connectionButton" onclick="connectPC()">connect</button>
+            <div id="qrcode"></div>
         </div>
     </div>
     <!-- menu here https://www.w3schools.com/howto/howto_js_sidenav.asp -->
@@ -124,6 +123,7 @@ SOFTWARE.
     <script src="js/digikom.js"></script>
     <script src="js/gyronorm.complete.min.js"></script>
     <script src="js/peer.min.js"></script>
+     <script src="js/qrcode.min.js"></script>
     <script>
         // from https://stackoverflow.com/a/5367656/1457481
         function padLeft(nr, n, str) {
@@ -235,9 +235,8 @@ SOFTWARE.
                 });
             } else {
                 var peer = new Peer({ key: 'p68wm6er5p7j5rk9' });
-                document.getElementById("connectionButton").disabled = true;
                 peer.on('open', function (id) {
-                    document.getElementById("connection-id").value = id;
+                    var qrcode = new QRCode(document.getElementById("qrcode"), window.location.href + "#" + id);
                     peer.on('connection', function (conn) {
                         conn.on('data', function (data) {
                             handleOrientation(data);
@@ -247,9 +246,8 @@ SOFTWARE.
             }
         }).catch(function (e) {
             var peer = new Peer({ key: 'p68wm6er5p7j5rk9' });
-            document.getElementById("connectionButton").disabled = true;
             peer.on('open', function (id) {
-                document.getElementById("connection-id").value = id;
+                var qrcode = new QRCode(document.getElementById("qrcode"), window.location.href + "#" + id);
                 peer.on('connection', function (conn) {
                     conn.on('data', function (data) {
                         handleOrientation(data);
@@ -257,11 +255,11 @@ SOFTWARE.
                 });
             });
         });
-        function connectPC() {
+        if (window.location.hash) {
+            var pc_id = window.location.hash.substring(1);
             var peer = new Peer({ key: 'p68wm6er5p7j5rk9' });
             peer.on('open', function (id) {
-                conn = peer.connect(document.getElementById("connection-id").value);
-                document.getElementById("connection-id").value = id;
+                conn = peer.connect(pc_id);
                 conn.on('open', function () {
                     connected = true;
                 });
