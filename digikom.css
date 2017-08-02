@@ -72,6 +72,7 @@ a {
     fill-opacity: 0;
     stroke: #704214;
     stroke-width: 0.5;
+    transform: translate(85px, 85px);
 }
 
 #lockToggleGroup {
