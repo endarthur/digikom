@@ -247,6 +247,7 @@ SOFTWARE.
         }).catch(function (e) {
             var peer = new Peer({ key: 'p68wm6er5p7j5rk9' });
             peer.on('open', function (id) {
+                // https://davidshimjs.github.io/qrcodejs/
                 var qrcode = new QRCode(document.getElementById("qrcode"), window.location.href + "#" + id);
                 peer.on('connection', function (conn) {
                     conn.on('data', function (data) {
@@ -255,6 +256,7 @@ SOFTWARE.
                 });
             });
         });
+        // https://stackoverflow.com/a/6682514/1457481
         if (window.location.hash) {
             var pc_id = window.location.hash.substring(1);
             var peer = new Peer({ key: 'p68wm6er5p7j5rk9' });
