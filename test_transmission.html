@@ -1,0 +1,19 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <script>
+        var os_socket = new WebSocket("ws://192.168.1.10:1302");
+        function handleOrientation(event) {
+            os_socket.send(`${event.alpha}/${event.gamma}`);
+        }
+        os_socket.onopen = function (event) {
+            window.addEventListener('deviceorientation', handleOrientation);
+        };
+    </script>
+</body>
+
+</html>
